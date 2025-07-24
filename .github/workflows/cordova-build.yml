@@ -1,0 +1,49 @@
+name: Build Cordova Android APK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest # বিল্ডটি একটি লিনাক্স মেশিনে চলবে
+
+    steps:
+      # ধাপ ক: আপনার রিপোজিটরির কোড ডাউনলোড করা
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ধাপ খ: Java Development Kit (JDK) সেটআপ করা (অ্যান্ড্রয়েড বিল্ডের জন্য জরুরি)
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      # ধাপ গ: Node.js সেটআপ করা (Cordova এবং npm-এর জন্য)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # একটি স্টেবল Node.js ভার্সন
+
+      # ধাপ ঘ: Cordova এবং প্রয়োজনীয় প্লাগইন ইনস্টল করা
+      - name: Install Cordova and plugins
+        run: |
+          npm install -g cordova
+          cordova platform add android
+          cordova plugin add cordova-plugin-file
+          cordova plugin add cordova-plugin-file-transfer
+          cordova plugin add cordova-plugin-media
+          cordova telemetry off # কোনো ডেটা শেয়ারিং বন্ধ করা
+
+      # ধাপ ঙ: অ্যান্ড্রয়েড অ্যাপ (APK) বিল্ড করা
+      - name: Build Android App
+        run: cordova build android
+
+      # ধাপ চ: বিল্ড হওয়া APK ফাইলটিকে আর্টিফ্যাক্ট হিসেবে আপলোড করা
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shrutipaath-hybrid-apk
+          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
