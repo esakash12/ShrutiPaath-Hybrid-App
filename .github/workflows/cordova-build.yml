@@ -13,7 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # === জাভা ভার্সন ১৭ সেট করা হয়েছে ===
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -50,9 +49,8 @@ jobs:
         run: cordova build android --release
 
       - name: Upload APK Artifact
-    uses: actions/upload-artifact@v4
-    with:
-      name: shrutipaath-hybrid-apk
-      # নির্দিষ্ট ফাইলের নামের পরিবর্তে, আমরা ওয়াইল্ডকার্ড (*) ব্যবহার করছি
-      # এর মানে হলো, release ফোল্ডারের ভেতরে থাকা .apk এক্সটেনশনযুক্ত যেকোনো ফাইল আপলোড করো
-      path: temp_cordova/platforms/android/app/build/outputs/apk/release/*.apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: shrutipaath-hybrid-apk
+          # ওয়াইল্ডকার্ড (*) ব্যবহার করে .apk ফাইল খুঁজে বের করা হচ্ছে
+          path: temp_cordova/platforms/android/app/build/outputs/apk/release/*.apk
