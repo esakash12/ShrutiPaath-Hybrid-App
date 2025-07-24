@@ -48,12 +48,11 @@ jobs:
         working-directory: ./temp_cordova
         run: cordova build android --release
 
-      # === নতুন এবং উন্নত ডিবাগিং ধাপ ===
-      # বিল্ডের পর সম্পূর্ণ temp_cordova ফোল্ডারের গঠন দেখা হচ্ছে
-      - name: List all files in the project directory after build
-        run: ls -R temp_cordova
+      # === ফাইনাল ডিবাগিং ধাপ: শুধুমাত্র APK ফাইল খোঁজা ===
+      - name: Find APK file in the entire project
+        run: find ./temp_cordova -type f -name "*.apk"
 
-      # আপলোড ধাপটি আমরা আপাতত নিষ্ক্রিয় রাখছি, কারণ আমরা জানি না পাথ কী হবে
+      # আপলোড ধাপটি এখনো নিষ্ক্রিয় আছে
       # - name: Upload APK Artifact
       #   uses: actions/upload-artifact@v4
       #   with:
