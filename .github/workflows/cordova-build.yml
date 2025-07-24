@@ -44,17 +44,17 @@ jobs:
           cordova plugin add cordova-plugin-media
           cordova telemetry off
 
-      - name: Build Android App
+      # === পরিবর্তন ১: --release ফ্ল্যাগটি সরানো হয়েছে ===
+      - name: Build Android App (Debug Mode)
         working-directory: ./temp_cordova
-        run: cordova build android --release
+        run: cordova build android
 
-      # === ফাইনাল ডিবাগিং ধাপ: শুধুমাত্র APK ফাইল খোঁজা ===
-      - name: Find APK file in the entire project
-        run: find ./temp_cordova -type f -name "*.apk"
+      # ডিবাগিং ধাপটি এখন আর প্রয়োজন নেই, তাই মুছে ফেলা হলো
 
-      # আপলোড ধাপটি এখনো নিষ্ক্রিয় আছে
-      # - name: Upload APK Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: shrutipaath-hybrid-apk
-      #     path: temp_cordova/platforms/android/app/build/outputs/apk/release/*.apk
+      # === পরিবর্তন ২: আপলোড ধাপটি সক্রিয় করা হয়েছে এবং পাথ পরিবর্তন করা হয়েছে ===
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shrutipaath-hybrid-apk
+          # পাথটি এখন debug ফোল্ডারের জন্য সেট করা হয়েছে
+          path: temp_cordova/platforms/android/app/build/outputs/apk/debug/app-debug.apk
