@@ -48,13 +48,14 @@ jobs:
         working-directory: ./temp_cordova
         run: cordova build android --release
 
-      # === নতুন ডিবাগিং ধাপ ===
-      # বিল্ডের পর ফাইলগুলো কোথায় আছে তা চেক করার জন্য
-      - name: List files in the build output directory
-        run: find temp_cordova/platforms/android/app/build/outputs/apk -name "*.apk" -print
+      # === নতুন এবং উন্নত ডিবাগিং ধাপ ===
+      # বিল্ডের পর সম্পূর্ণ temp_cordova ফোল্ডারের গঠন দেখা হচ্ছে
+      - name: List all files in the project directory after build
+        run: ls -R temp_cordova
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: shrutipaath-hybrid-apk
-          path: temp_cordova/platforms/android/app/build/outputs/apk/release/*.apk
+      # আপলোড ধাপটি আমরা আপাতত নিষ্ক্রিয় রাখছি, কারণ আমরা জানি না পাথ কী হবে
+      # - name: Upload APK Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: shrutipaath-hybrid-apk
+      #     path: temp_cordova/platforms/android/app/build/outputs/apk/release/*.apk
