@@ -7,43 +7,64 @@ on:
 
 jobs:
   build-android:
-    runs-on: ubuntu-latest # বিল্ডটি একটি লিনাক্স মেশিনে চলবে
+    runs-on: ubuntu-latest
 
     steps:
       # ধাপ ক: আপনার রিপোজিটরির কোড ডাউনলোড করা
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ধাপ খ: Java Development Kit (JDK) সেটআপ করা (অ্যান্ড্রয়েড বিল্ডের জন্য জরুরি)
+      # ধাপ খ: Java Development Kit (JDK) সেটআপ করা
       - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
 
-      # ধাপ গ: Node.js সেটআপ করা (Cordova এবং npm-এর জন্য)
+      # ধাপ গ: Node.js সেটআপ করা
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # একটি স্টেবল Node.js ভার্সন
+          node-version: '18'
 
-      # ধাপ ঘ: Cordova এবং প্রয়োজনীয় প্লাগইন ইনস্টল করা
-      - name: Install Cordova and plugins
+      # ধাপ ঘ: Cordova ইনস্টল করা
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      # === নতুন এবং সংশোধিত ধাপ ===
+      # ধাপ ঙ: Cordova প্রজেক্ট তৈরি এবং আপনার কোড কপি করা
+      - name: Create Cordova Project and copy files
         run: |
-          npm install -g cordova
+          # 'temp_cordova' নামে একটি নতুন Cordova প্রজেক্ট তৈরি করা হচ্ছে
+          cordova create temp_cordova com.shrutipaath.app ShrutiPaath
+          # আমাদের আসল ওয়েব অ্যাপের ফাইলগুলোকে Cordova প্রজেক্টের www ফোল্ডারে কপি করা হচ্ছে
+          # (config.xml, js, css, index.html)
+          # -R মানে হলো রিকার্সিভলি বা ফোল্ডারসহ
+          cp -R ./* temp_cordova/www/
+          # এখন আমরা Cordova প্রজেক্টের ভেতরে যাব
+          cd temp_cordova
+
+      # ধাপ চ: প্ল্যাটফর্ম এবং প্লাগইন যোগ করা (সঠিক ফোল্ডারের ভেতরে)
+      - name: Add platforms and plugins
+        # এই কমান্ডটি এখন temp_cordova ফোল্ডারের ভেতরে চলবে
+        run: |
+          cd temp_cordova
           cordova platform add android
           cordova plugin add cordova-plugin-file
           cordova plugin add cordova-plugin-file-transfer
           cordova plugin add cordova-plugin-media
-          cordova telemetry off # কোনো ডেটা শেয়ারিং বন্ধ করা
+          cordova telemetry off
 
-      # ধাপ ঙ: অ্যান্ড্রয়েড অ্যাপ (APK) বিল্ড করা
+      # ধাপ ছ: অ্যান্ড্রয়েড অ্যাপ (APK) বিল্ড করা
       - name: Build Android App
-        run: cordova build android
+        run: |
+          cd temp_cordova
+          cordova build android --release
 
-      # ধাপ চ: বিল্ড হওয়া APK ফাইলটিকে আর্টিফ্যাক্ট হিসেবে আপলোড করা
+      # ধাপ জ: বিল্ড হওয়া APK ফাইলটিকে আর্টিফ্যাক্ট হিসেবে আপলোড করা
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: shrutipaath-hybrid-apk
-          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          # পাথটি এখন temp_cordova ফোল্ডারের ভেতরে থাকবে
+          path: temp_cordova/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
