@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; script-src 'self' https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://firestore.googleapis.com wss://*.firebaseio.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>শ্রুতিপাঠ</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>শ্রুতিপাঠ</h1>
+    </header>
+
+    <main id="app-container">
+        <!-- শুরুতে একটি লোডিং মেসেজ দেখানো হবে -->
+        <div id="loading-view" class="view active">
+            <div class="spinner"></div>
+            <p>লোড হচ্ছে...</p>
+        </div>
+
+        <!-- হোম পেজ -->
+        <div id="home-view" class="view">
+            <h2>বিষয়সমূহ</h2>
+            <div id="subject-list" class="grid-container"></div>
+        </div>
+
+        <!-- অধ্যায়ের পেজ -->
+        <div id="subject-view" class="view">
+            <button id="back-to-home" class="back-button">← ফিরে যান</button>
+            <h2 id="subject-title"></h2>
+            <div id="chapter-list"></div>
+        </div>
+    </main>
+
+    <!-- অডিও প্লেয়ার -->
+    <footer>
+        <p id="now-playing">কিছু বাজছে না</p>
+        <audio id="audio-player" controls style="width: 100%;"></audio>
+    </footer>
+
+    <!-- Cordova এবং Firebase SDK -->
+    <script src="cordova.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- আমাদের কাস্টম জাভাস্ক্রিপ্ট -->
+    <script src="js/app.js"></script>
+
+</body>
+</html>
