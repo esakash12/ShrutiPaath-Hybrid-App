@@ -50,7 +50,9 @@ jobs:
         run: cordova build android --release
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: shrutipaath-hybrid-apk
-          path: temp_cordova/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+    uses: actions/upload-artifact@v4
+    with:
+      name: shrutipaath-hybrid-apk
+      # নির্দিষ্ট ফাইলের নামের পরিবর্তে, আমরা ওয়াইল্ডকার্ড (*) ব্যবহার করছি
+      # এর মানে হলো, release ফোল্ডারের ভেতরে থাকা .apk এক্সটেনশনযুক্ত যেকোনো ফাইল আপলোড করো
+      path: temp_cordova/platforms/android/app/build/outputs/apk/release/*.apk
